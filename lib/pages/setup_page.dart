@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
- import 'game_page.dart';
+import 'game_page.dart';
 
 class PlayerSetupPage extends StatefulWidget {
   const PlayerSetupPage({super.key});
@@ -24,7 +24,10 @@ class _PlayerSetupPageState extends State<PlayerSetupPage> {
 
       if (k > n && k > m) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('K cannot be greater than both N and M')),
+          SnackBar(
+            content: const Text('K cannot be greater than both N and M'),
+            backgroundColor: Colors.red[400],
+          ),
         );
         return;
       }
@@ -54,7 +57,7 @@ class _PlayerSetupPageState extends State<PlayerSetupPage> {
         validator: (v) => v == null || v.isEmpty ? 'Required' : null,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+          labelStyle: const TextStyle(fontWeight: FontWeight.w600),
           filled: true,
           fillColor: Colors.white,
           contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -66,46 +69,55 @@ class _PlayerSetupPageState extends State<PlayerSetupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: Colors.blue[50],
+      backgroundColor: Colors.indigo[50],
       appBar: AppBar(
-        title: const Text('Tic Tac Toe: Setup Page'),
+        title: const Text('Tic Tac Toe Setup'),
         backgroundColor: Colors.indigo,
+        centerTitle: true,
+        elevation: 2,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            elevation: 8,
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text('Player Information', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  _buildInputField('Player 1 Name', _player1),
-                  _buildInputField('Player 2 Name', _player2),
-                  const SizedBox(height: 16),
-                  const Text('Board Settings', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  _buildInputField('Number of Rows (N)', _n, keyboardType: TextInputType.number),
-                  _buildInputField('Number of Columns (M)', _m, keyboardType: TextInputType.number),
-                  _buildInputField('Winning Line Length (K)', _k, keyboardType: TextInputType.number),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: _startGame,
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Start Game', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.indigo,
-                      side: const BorderSide(color: Colors.indigo),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  )
-                ],
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: size.width > 500 ? 500 : size.width),
+            child: Form(
+              key: _formKey,
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                elevation: 6,
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text('Players', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                      _buildInputField('Player 1 Name', _player1),
+                      _buildInputField('Player 2 Name', _player2),
+                      const SizedBox(height: 16),
+                      const Text('Game Settings', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                      _buildInputField('Rows (N)', _n, keyboardType: TextInputType.number),
+                      _buildInputField('Columns (M)', _m, keyboardType: TextInputType.number),
+                      _buildInputField('Winning Line (K)', _k, keyboardType: TextInputType.number),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: _startGame,
+                        icon: const Icon(Icons.play_arrow),
+                        label: const Text('Start Game'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.indigo,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
