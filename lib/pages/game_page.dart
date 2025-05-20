@@ -80,17 +80,30 @@ class _GamePageState extends State<GamePage> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(result),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Column(
+          children: [
+            Icon(
+              result == 'Draw!' ? Icons.handshake : Icons.emoji_events,
+              color: result == 'Draw!' ? Colors.orange : Colors.green,
+              size: 48,
+            ),
+            const SizedBox(height: 8),
+            Text(result, style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
         actions: [
           TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _restart();
-              },
-              child: const Text('Restart')),
+            onPressed: () {
+              Navigator.pop(context);
+              _restart();
+            },
+            child: const Text('Restart'),
+          ),
           TextButton(
-              onPressed: () => Navigator.popUntil(context, (r) => r.isFirst),
-              child: const Text('Home')),
+            onPressed: () => Navigator.popUntil(context, (route) => route.isFirst),
+            child: const Text('Home'),
+          ),
         ],
       ),
     );
@@ -108,45 +121,58 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.player1} vs ${widget.player2}')),
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          Text(
-            gameOver ? result : '${isPlayer1 ? widget.player1 : widget.player2}\'s turn',
-            style: const TextStyle(fontSize: 20),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: GridView.builder(
-              itemCount: widget.n * widget.m,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: widget.m),
-              itemBuilder: (_, index) {
-                int row = index ~/ widget.m;
-                int col = index % widget.m;
-                return GestureDetector(
-                  onTap: () => _handleTap(row, col),
-                  child: Container(
-                    margin: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Colors.black12),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        board[row][col],
-                        style: const TextStyle(
-                            fontSize: 32, fontWeight: FontWeight.bold),
+      appBar: AppBar(
+        title: Text('${widget.player1} vs ${widget.player2}'),
+        backgroundColor: Colors.indigo,
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Text(
+              gameOver ? result : '${isPlayer1 ? widget.player1 : widget.player2}\'s Turn',
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.indigo),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: widget.n * widget.m,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: widget.m,
+                  mainAxisSpacing: 6,
+                  crossAxisSpacing: 6,
+                ),
+                itemBuilder: (_, index) {
+                  int row = index ~/ widget.m;
+                  int col = index % widget.m;
+                  return GestureDetector(
+                    onTap: () => _handleTap(row, col),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.indigo.shade100),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          board[row][col],
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: board[row][col] == 'X' ? Colors.red : Colors.blue,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
